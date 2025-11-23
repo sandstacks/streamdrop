@@ -23,3 +23,49 @@
   align-items: center;
   justify-content: center;
 }
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 640px;
+}
+
+.airdrop-claimer {
+  text-align: left;
+}
+
+.airdrop-claimer__hint {
+  margin-top: 0.5rem;
+  color: #888;
+}
+
+.airdrop-claimer__form {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.airdrop-claimer__form input {
+  flex: 1;
+  padding: 0.6em 0.9em;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: transparent;
+  color: inherit;
+}
+
+.airdrop-claimer__error {
+  margin-top: 0.75rem;
+  color: #ff6b6b;
+}
+
+.airdrop-claimer__details {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  max-height: 260px;
+  overflow: auto;
+}
