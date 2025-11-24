@@ -124,5 +124,3 @@ export const AirdropDetailsSection = ({
     </div>
   )
 }
-
-
