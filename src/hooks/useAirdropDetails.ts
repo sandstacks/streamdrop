@@ -2,9 +2,9 @@ import { useCallback, useRef, useState } from 'react'
 import { PublicKey, type Connection } from '@solana/web3.js'
 import { StreamflowDistributorSolana } from '@streamflow/distributor'
 import BN from 'bn.js'
-import { formatAmountFromBN } from '../utils/format'
+import { formatAmountFromBN } from '../utils'
 import { appConfig } from '../config'
-import type { DistributorAccountLike, DistributorClient } from '../utils/streamflowDistributor'
+import type { DistributorAccountLike, DistributorClient } from '../utils'
 
 export type AirdropDetails = {
   id: string
@@ -239,5 +239,3 @@ export const useAirdropDetails = (
     setError,
   }
 }
-
-

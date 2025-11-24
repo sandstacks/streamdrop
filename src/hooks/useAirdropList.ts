@@ -3,7 +3,7 @@ import type {
   SimplifiedAirdrop,
   DistributorLike,
   DistributorClient,
-} from '../utils/streamflowDistributor'
+} from '../utils'
 
 export type UseAirdropListResult = {
   airdrops: SimplifiedAirdrop[]
@@ -21,7 +21,7 @@ export const useAirdropList = (
     try {
       setIsLoading(true)
       const distributors = (await distributorClient.searchDistributors({})) as DistributorLike[]
-      const { mapDistributorsToAirdrops } = await import('../utils/streamflowDistributor')
+      const { mapDistributorsToAirdrops } = await import('../utils')
       const mapped = mapDistributorsToAirdrops(distributors)
       setAirdrops(mapped)
     } catch (e) {
@@ -41,5 +41,3 @@ export const useAirdropList = (
     isLoading,
   }
 }
-
-

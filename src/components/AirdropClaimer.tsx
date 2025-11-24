@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
-import { createDistributorClient } from '../utils/streamflowDistributor'
+import { createDistributorClient } from '../utils'
 import { RecentAirdropsList } from './RecentAirdropsList'
 import { AirdropDetailsSection } from './AirdropDetailsSection'
-import { useAirdropDetails } from '../hooks/useAirdropDetails'
-import { useAirdropList } from '../hooks/useAirdropList'
+import { useAirdropDetails, useAirdropList } from '../hooks'
+import { appConfig } from '../config'
 
 export const AirdropClaimer = () => {
   const { connection } = useConnection()
@@ -78,18 +78,23 @@ export const AirdropClaimer = () => {
   const combinedError = error ?? detailsError
 
   return (
-    <section className="mt-6 space-y-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-5 shadow-soft-xl backdrop-blur sm:p-6">
+    <section className="mt-6 space-y-5 rounded-2xl border border-slate-800 bg-slate-950/70 p-5 shadow-soft-xl backdrop-blur-sm sm:p-6">
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold text-slate-50 sm:text-xl">
-          Airdrop details & claim
-        </h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold text-slate-50 sm:text-xl">
+            Airdrop details &amp; claim
+          </h2>
+          <span className="hidden rounded-full border border-slate-700/80 bg-slate-900/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-400 sm:inline-flex">
+            {appConfig.streamflowChain} • {appConfig.streamflowCluster}
+          </span>
+        </div>
         <p className="text-xs text-slate-400 sm:text-sm">
-          Paste a Streamflow airdrop ID (distributor address) or pick one from the list below to see its parameters and your
-          personal allocation.
+          Paste a Streamflow airdrop ID (distributor address) or pick one from the list below to
+          see its parameters and your personal allocation.
         </p>
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-xl bg-slate-950/60 p-3 sm:flex-row sm:items-end sm:gap-4 sm:p-4">
         <div className="flex-1">
           <label className="mb-1 block text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
             Airdrop ID
@@ -136,8 +141,6 @@ export const AirdropClaimer = () => {
           {combinedError}
         </p>
       )}
-
-      
     </section>
   )
 }

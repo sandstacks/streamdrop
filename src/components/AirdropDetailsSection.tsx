@@ -1,16 +1,5 @@
 import type { PublicKey } from '@solana/web3.js'
-
-type AirdropDetails = {
-  id: string
-  tokenMint: string
-  type: string
-  recipientsClaimed: number
-  recipientsTotal: number
-  amountClaimed: string
-  amountTotal: string
-  start: number
-  end: number
-}
+import type { AirdropDetails } from '../hooks'
 
 type Props = {
   details: AirdropDetails
@@ -31,12 +20,17 @@ export const AirdropDetailsSection = ({
   isClaiming,
   onClaim,
 }: Props) => {
+  const recipientProgress =
+    details.recipientsTotal > 0
+      ? Math.min(100, (details.recipientsClaimed / details.recipientsTotal) * 100)
+      : 0
+
   return (
     <div className="mt-2 grid gap-4 sm:grid-cols-[2fr,1.3fr]">
-      <div className="space-y-3 rounded-xl border border-slate-800 bg-surfaceAlt/70 p-4">
+      <div className="space-y-3 rounded-xl border border-slate-800 bg-surfaceAlt/80 p-4">
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-sm font-semibold text-slate-100">Airdrop overview</h3>
-          <span className="inline-flex items-center rounded-full bg-slate-900/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">
+          <span className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-300">
             {details.type}
           </span>
         </div>
@@ -79,9 +73,24 @@ export const AirdropDetailsSection = ({
             </dd>
           </div>
         </dl>
+
+        <div className="mt-2 space-y-1">
+          <div className="flex items-center justify-between text-[11px] text-slate-400">
+            <span>Distribution progress</span>
+            <span className="font-medium text-slate-200">
+              {recipientProgress.toFixed(0)}%
+            </span>
+          </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-900">
+            <div
+              className="h-full rounded-full bg-accent transition-[width] duration-300 ease-out"
+              style={{ width: `${recipientProgress}%` }}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-3 rounded-xl border border-slate-800 bg-surfaceAlt/70 p-4">
+      <div className="space-y-3 rounded-xl border border-slate-800 bg-gradient-to-b from-slate-950/90 to-surfaceAlt/90 p-4">
         <h3 className="text-sm font-semibold text-slate-100">Your allocation</h3>
         <p className="text-xs text-slate-400">
           Connected wallet:{' '}

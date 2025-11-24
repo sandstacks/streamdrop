@@ -101,5 +101,3 @@ export const mapDistributorsToAirdrops = (distributors: DistributorLike[]): Simp
     })
     .filter((a) => a.id && a.tokenMint)
 }
-
-

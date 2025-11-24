@@ -11,5 +11,3 @@ export const formatAmountFromBN = (raw: any, decimals: number): string => {
     return '0'
   }
 }
-
-

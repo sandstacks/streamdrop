@@ -223,5 +223,3 @@ export function formatUsdForTokenAmount(
   const usd = getUsdValueForAmount(amount, mint, prices)
   return formatUsd(usd, options)
 }
-
-

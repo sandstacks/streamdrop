@@ -6,7 +6,6 @@ export const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col pt-16">
-
       <Navbar />
       <main className="flex-1 mx-auto w-full max-w-5xl px-4 py-10 space-y-8">
         <AirdropClaimer />
@@ -15,4 +14,3 @@ export const HomePage = () => {
     </div>
   );
 };
-
