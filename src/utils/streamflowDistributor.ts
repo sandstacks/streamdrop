@@ -1,7 +1,7 @@
 import { ICluster } from '@streamflow/stream'
 import { StreamflowDistributorSolana } from '@streamflow/distributor'
 import type { Connection, PublicKey } from '@solana/web3.js'
-import { appConfig } from '../config'
+import { appConfig } from './config'
 
 const clusterFromEnv = (clusterName: string | undefined): ICluster => {
   switch (clusterName) {
@@ -54,6 +54,8 @@ export type DistributorClient = {
   getClaim: (pubkey: PublicKey) => Promise<unknown>
   getDistributors: (args: { ids?: string[] }) => Promise<DistributorLike[] | unknown[]>
   searchDistributors: (args: Record<string, unknown>) => Promise<DistributorLike[] | unknown[]>
+  claim: (params: unknown, opts: unknown) => Promise<{ txId: string }>
+  closeClaim: (params: unknown, opts: unknown) => Promise<{ txId: string }>
 }
 
 export const createDistributorClient = (connection: Connection | null): DistributorClient | null => {
@@ -64,9 +66,9 @@ export const createDistributorClient = (connection: Connection | null): Distribu
   }) as unknown as DistributorClient
 }
 
-export const mapDistributorsToAirdrops = (distributors: DistributorLike[]): SimplifiedAirdrop[] => {
-  return distributors
-    .slice(0, 10)
+export const mapDistributorsToAirdrops = (distributors: DistributorLike[], limit?: number): SimplifiedAirdrop[] => {
+  const items = limit ? distributors.slice(0, limit) : distributors
+  return items
     .map((item) => {
       const account: DistributorAccountLike = item.account ?? (item as DistributorAccountLike)
 

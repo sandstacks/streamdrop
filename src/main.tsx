@@ -6,7 +6,7 @@ import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 import App from './App.tsx'
 import './index.css'
 import '@solana/wallet-adapter-react-ui/styles.css'
-import { appConfig } from './config'
+import { appConfig } from './utils/config.ts'
 
 const endpoint = appConfig.solanaRpcUrl
 

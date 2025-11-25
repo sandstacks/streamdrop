@@ -3,7 +3,7 @@ import { PublicKey, type Connection } from '@solana/web3.js'
 import { StreamflowDistributorSolana } from '@streamflow/distributor'
 import BN from 'bn.js'
 import { formatAmountFromBN } from '../utils'
-import { appConfig } from '../config'
+import { appConfig } from '../utils/config'
 import type { DistributorAccountLike, DistributorClient } from '../utils'
 
 export type AirdropDetails = {
@@ -17,6 +17,7 @@ export type AirdropDetails = {
   amountTotal: string
   start: number
   end: number
+  claimsClosableByClaimant: boolean
 }
 
 export type ProofApiResponse = {
@@ -38,6 +39,7 @@ export type UseAirdropDetailsResult = {
   claimableAmount: string
   numericClaimable: number
   claimStatus: ClaimStatus | null
+  hasClaimed: boolean
   isLoading: boolean
   error: string | null
   fetchById: (id: string) => Promise<void>
@@ -53,6 +55,7 @@ export const useAirdropDetails = (
   const [airdropDetails, setAirdropDetails] = useState<AirdropDetails | null>(null)
   const [claimableAmount, setClaimableAmount] = useState<string>('0')
   const [claimStatus, setClaimStatus] = useState<ClaimStatus | null>(null)
+  const [hasClaimed, setHasClaimed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -71,7 +74,6 @@ export const useAirdropDetails = (
 
       try {
         const url = `${appConfig.streamflowApiBase}/v2/api/airdrops/${distributorId}/claimants/${walletAddress}?chain=${appConfig.streamflowChain}&cluster=${appConfig.streamflowCluster}`
-        console.log('Fetching proof from:', url)
 
         const response = await fetch(url)
         if (!response.ok) return null
@@ -92,6 +94,7 @@ export const useAirdropDetails = (
       if (!distributorClient || !connection || !publicKey) {
         setClaimableAmount('0')
         setClaimStatus(null)
+        setHasClaimed(false)
         return
       }
 
@@ -107,42 +110,50 @@ export const useAirdropDetails = (
 
         const status = (await distributorClient.getClaim(claimStatusPda)) as ClaimStatus | null
 
+        // CRITICAL: If ClaimStatus PDA exists on-chain, user has ALREADY claimed!
+        // The existence of this account means newClaim/claimLocked was called
         if (status) {
-          const rawClaimable = status.claimableAmount
+          // User has claimed - ClaimStatus PDA exists
+          setHasClaimed(true)
 
+          const rawClaimable = status.claimableAmount
           if (rawClaimable) {
             setClaimableAmount(formatAmountFromBN(rawClaimable, details.tokenDecimals))
-            setClaimStatus(status)
-            return
+          } else {
+            setClaimableAmount('0')
           }
-
-          console.log(
-            'On-chain claim status exists but has no top-level `claimableAmount`. Falling back to API.',
-          )
+          setClaimStatus(status)
+          return
         }
 
+        // No ClaimStatus PDA = user hasn't claimed yet
+        // Fetch proof from API for first-time claim
         const apiData = await fetchProofFromApi(details.id, publicKey.toBase58())
+
         if (apiData) {
           const unlocked = new BN(apiData.amountUnlocked)
           const locked = new BN(apiData.amountLocked)
           const total = unlocked.add(locked)
 
           setClaimableAmount(formatAmountFromBN(total, details.tokenDecimals))
-
           setClaimStatus({
             proof: apiData.proof,
             amountUnlocked: unlocked,
             amountLocked: locked,
             claimableAmount: total,
           })
+          setHasClaimed(false) // Has allocation but hasn't claimed
         } else {
+          // No allocation for this user
           setClaimableAmount('0')
           setClaimStatus(null)
+          setHasClaimed(false)
         }
-      } catch (err) {
-        console.error(err)
+      } catch {
+        // Error fetching claim status - treat as not claimed
         setClaimableAmount('0')
         setClaimStatus(null)
+        setHasClaimed(false)
       }
     },
     [connection, distributorClient, fetchProofFromApi, publicKey],
@@ -178,6 +189,7 @@ export const useAirdropDetails = (
         amountTotal: formatAmountFromBN(d.maxTotalClaim, decimals),
         start,
         end,
+        claimsClosableByClaimant: Boolean(d.claimsClosableByClaimant),
       }
     },
     [connection, distributorClient],
@@ -232,6 +244,7 @@ export const useAirdropDetails = (
     claimableAmount,
     numericClaimable,
     claimStatus,
+    hasClaimed,
     isLoading,
     error,
     fetchById,
