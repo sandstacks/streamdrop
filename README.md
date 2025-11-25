@@ -2,24 +2,6 @@
 
 A React + TypeScript web application for viewing and claiming Streamflow Airdrops on Solana. Built using the [Streamflow JS SDK](https://github.com/streamflow-finance/js-sdk/) and integrated with Phantom wallet for seamless user experience.
 
-## Features
-
-### Core Functionality
-- ✅ **Phantom Wallet Integration** - Connect using Phantom browser extension
-- ✅ **Airdrop Details Display** - View comprehensive airdrop parameters
-- ✅ **Claim Tokens** - Claim eligible airdrops with proof verification
-- ✅ **Auto Close Claims** - Automatically reclaim rent after claiming (when enabled)
-- ✅ **Recent Airdrops List** - Browse and select from available airdrops
-- ✅ **USD Price Display** - Real-time token prices via Jupiter Price API
-
-### Airdrop Parameters Displayed
-- Airdrop Type (Vested/Instant)
-- Recipients (claimed/total)
-- Token amounts (claimed/total) with USD values
-- Distribution progress
-- Start and end timestamps
-- User's claimable allocation with USD value
-
 ## Tech Stack
 
 - **Frontend:** React + TypeScript
@@ -28,7 +10,6 @@ A React + TypeScript web application for viewing and claiming Streamflow Airdrop
 - **SDK:** @streamflow/distributor 
 - **Wallet:** Solana wallet adapter + Phantom
 - **Styling:** Tailwind CSS
-- **Price API:** Jupiter Price API v3
 - **Notifications:** react-hot-toast
 
 ## Prerequisites
@@ -43,7 +24,7 @@ A React + TypeScript web application for viewing and claiming Streamflow Airdrop
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd Streamflow-Task
+cd streamdrop
 ```
 
 2. Install dependencies:
@@ -161,25 +142,4 @@ src/
 - [Streamflow API Docs](https://api-public.streamflow.finance/docs)
 - [Solana Documentation](https://docs.solana.com/)
 - [Phantom Wallet](https://phantom.app/)
-- [Jupiter Price API](https://station.jup.ag/docs/apis/price-api)
-
-## License
-
-MIT
-
-## Contributing
-
-This is a test task implementation. For production use, consider:
-- Adding comprehensive test coverage
-- Implementing error boundaries
-- Adding analytics/monitoring
-- Optimizing bundle size
-- Adding retry logic for failed requests
-- Implementing proper state management for larger apps
-
-## Support
-
-For issues with:
-- **This app:** Check the code or create an issue
-- **Streamflow SDK:** [Streamflow GitHub](https://github.com/streamflow-finance/js-sdk/issues)
-- **Phantom Wallet:** [Phantom Support](https://help.phantom.app/)
+- [Jupiter Price API](https://station.jup.ag/docs/)
